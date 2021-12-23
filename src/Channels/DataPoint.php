@@ -35,8 +35,4 @@ class DataPoint extends Data {
         return $this->getOrSet('stdDev', $stdDev) ?? $this;
     }
 
-    public function properties(array $properties = null): array|static {
-        return $this->getOrSet('properties', $properties) ?? $this;
-    }
-
 }
