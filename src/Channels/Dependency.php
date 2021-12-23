@@ -8,6 +8,8 @@ use LaravelAzMonitor\Contracts\Data;
 class Dependency extends Data {
 
     public function __construct() {
+        $this->envelopeType = 'Microsoft.ApplicationInsights.RemoteDependency';
+        $this->dataType = 'RemoteDependencyData';
         $this->data['ver'] = 2;
     }
 

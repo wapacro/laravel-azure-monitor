@@ -7,6 +7,12 @@ use LaravelAzMonitor\Contracts\Data;
 
 class Request extends Data {
 
+    public function __construct() {
+        $this->envelopeType = 'Microsoft.ApplicationInsights.Request';
+        $this->dataType = 'RequestData';
+        $this->data['ver'] = 2;
+    }
+
     public function id(string $id = null): string|static {
         return $this->getOrSet('id', $id) ?? $this;
     }

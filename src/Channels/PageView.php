@@ -6,6 +6,12 @@ use LaravelAzMonitor\Contracts\Data;
 
 class PageView extends Data {
 
+    public function __construct() {
+        $this->envelopeType = 'Microsoft.ApplicationInsights.PageView';
+        $this->dataType = 'PageViewData';
+        $this->data['ver'] = 2;
+    }
+
     public function name(string $name = null): string|static {
         return $this->getOrSet('name', $name) ?? $this;
     }

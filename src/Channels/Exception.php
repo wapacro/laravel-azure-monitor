@@ -7,6 +7,8 @@ use LaravelAzMonitor\Contracts\Data;
 class Exception extends Data {
 
     public function __construct() {
+        $this->envelopeType = 'Microsoft.ApplicationInsights.Exception';
+        $this->dataType = 'ExceptionData';
         $this->data['ver'] = 2;
     }
 

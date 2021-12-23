@@ -3,11 +3,31 @@
 namespace LaravelAzMonitor\Contracts;
 
 use BackedEnum;
+use DateTimeImmutable;
 use DateTimeInterface;
 
 abstract class Data {
 
     protected array $data = [];
+    protected string $envelopeType;
+    protected string $dataType;
+    protected DateTimeImmutable $time;
+
+    public function getEnvelopeType(): string {
+        return $this->envelopeType;
+    }
+
+    public function getDataType(): string {
+        return $this->dataType;
+    }
+
+    public function getTime(): DateTimeImmutable {
+        return $this->time;
+    }
+
+    public function setTime(DateTimeImmutable $time): void {
+        $this->time = $time;
+    }
 
     public function serialize(): array {
         return array_map(function ($data) {

@@ -7,6 +7,12 @@ use LaravelAzMonitor\Contracts\SeverityLevel;
 
 class Message extends Data {
 
+    public function __construct() {
+        $this->envelopeType = 'Microsoft.ApplicationInsights.Message';
+        $this->dataType = 'MessageData';
+        $this->data['ver'] = 2;
+    }
+
     public function message(string $message = null): string|static {
         return $this->getOrSet('message', $message) ?? $this;
     }
