@@ -34,12 +34,12 @@ abstract class Data {
             if ($data instanceof BackedEnum) return (int)$data;
             if ($data instanceof DateTimeInterface) return $data->format(DATE_ATOM);
             return $data;
-        }, $this->data);
+        }, array_filter($this->data));
     }
 
     protected function getOrSet(string $key, mixed $value): mixed {
-        if (array_key_exists($key, $this->data)) return $this->data[$key];
-        if ($value) $this->data[$key] = $value;
+        if (array_key_exists($key, $this->data) && is_null($value)) return $this->data[$key];
+        if (!is_null($value)) $this->data[$key] = $value;
         return null;
     }
 

@@ -35,7 +35,7 @@ class Envelope extends Data {
         return $this->getOrSet('tags', $tags) ?? $this;
     }
 
-    public function data(array $data = null): array|static {
+    public function data(Data $data = null): Data|static {
         return $this->getOrSet('data', $data) ?? $this;
     }
 
