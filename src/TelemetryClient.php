@@ -10,6 +10,7 @@ use LaravelAzMonitor\Channels\Event;
 use LaravelAzMonitor\Channels\Exception;
 use LaravelAzMonitor\Channels\ExceptionDetail;
 use LaravelAzMonitor\Channels\Message;
+use LaravelAzMonitor\Channels\MetricData;
 use LaravelAzMonitor\Channels\PageView;
 use LaravelAzMonitor\Channels\Request;
 use LaravelAzMonitor\Channels\StackFrame;
@@ -24,7 +25,6 @@ class TelemetryClient {
 
     protected TelemetryContext $context;
     protected TelemetryChannel $channel;
-    protected array $queue = [];
 
     public function __construct(TelemetryContext $context = null, TelemetryChannel $channel = null) {
         $this->context = $context ?? new TelemetryContext();
@@ -35,54 +35,55 @@ class TelemetryClient {
      * Sends a Page View event to the Application Insights service
      */
     public function trackPageView(string $name, string $url, float $duration, array $properties = null, array $measurements = null): void {
-        $this->queue[] = (new PageView())
+        $this->channel->addToQueue((new PageView())
             ->name($name)
             ->url($url)
             ->duration($duration)
             ->properties($properties)
-            ->measurements($measurements);
+            ->measurements($measurements), $this->context);
     }
 
     /**
      * Sends a Metric to the Application Insights service
      */
     public function trackMetric(string $name, float $value, DataPointType $type = null, int $count = null, float $min = null, float $max = null, float $stdDev = null, array $properties = null): void {
-        $this->queue[] = (new DataPoint())
-            ->name($name)
-            ->value($value)
-            ->type($type)
-            ->count($count)
-            ->min($min)
-            ->max($max)
-            ->standardDeviation($stdDev)
-            ->properties($properties);
+        $this->channel->addToQueue((new MetricData())->metrics([
+            (new DataPoint())
+                ->name($name)
+                ->value($value)
+                ->type($type)
+                ->count($count)
+                ->min($min)
+                ->max($max)
+                ->standardDeviation($stdDev),
+        ])->properties($properties), $this->context);
     }
 
     /**
      * Sends an Event to the Application Insights service
      */
     public function trackEvent(string $name, array $properties = null, array $measurements = null): void {
-        $this->queue[] = (new Event())
+        $this->channel->addToQueue((new Event())
             ->name($name)
             ->properties($properties)
-            ->measurements($measurements);
+            ->measurements($measurements), $this->context);
     }
 
     /**
      * Sends a Trace to the Application Insights service
      */
     public function trackTrace(string $message, SeverityLevel $severity, array $properties = null): void {
-        $this->queue[] = (new Message())
+        $this->channel->addToQueue((new Message())
             ->message($message)
             ->severity($severity)
-            ->properties($properties);
+            ->properties($properties), $this->context);
     }
 
     /**
      * Sends a Dependency to the Application Insights service
      */
     public function trackDependency(string $name, string $type = "", string $command = null, DateTimeImmutable $start = null, float $duration = null, bool $success = null, int $result = null, array $properties = null): void {
-        $this->queue[] = (new Dependency())
+        $this->channel->addToQueue((new Dependency())
             ->name($name)
             ->type($type)
             ->command($command)
@@ -90,7 +91,7 @@ class TelemetryClient {
             ->duration($duration)
             ->successful($success)
             ->resultCode($result)
-            ->properties($properties);
+            ->properties($properties), $this->context);
     }
 
     /**
@@ -128,10 +129,10 @@ class TelemetryClient {
         }
 
         $details->stack($stackFrames);
-        $this->queue[] = (new Exception())
+        $this->channel->addToQueue((new Exception())
             ->exceptions([$details])
             ->properties($properties)
-            ->measurements($measurements);
+            ->measurements($measurements), $this->context);
     }
 
     /**
@@ -151,12 +152,12 @@ class TelemetryClient {
      * @see beginRequest
      */
     public function endRequest(Request $request, float $duration = 0, int $result = 200, bool $success = true, array $properties = null, array $measurements = null): void {
-        $this->queue[] = $request
+        $this->channel->addToQueue($request
             ->duration($duration)
             ->resultCode($result)
             ->successful($success)
             ->properties($properties)
-            ->measurements($measurements);
+            ->measurements($measurements), $this->context);
     }
 
 
