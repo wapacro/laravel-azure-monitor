@@ -1,0 +1,43 @@
+{
+  "name": "wapacro/laravel-azure-monitor",
+  "type": "library",
+  "keywords": [
+    "laravel",
+    "azure",
+    "monitor",
+    "appinsights"
+  ],
+  "homepage": "https://github.com/wapacro/laravel-azure-monitor",
+  "license": "Apache-2.0",
+  "autoload": {
+    "psr-4": {
+      "LaravelAzMonitor\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "LaravelAzMonitor\\Test\\": "tests/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Roman Ackermann",
+      "homepage": "https://github.com/wapacro"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=8.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.4",
+    "pestphp/pest": "^1.21"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "LaravelAzMonitor\\AzMonitorServiceProvider"
+      ]
+    }
+  }
+}
