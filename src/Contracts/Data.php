@@ -22,7 +22,7 @@ abstract class Data {
     }
 
     public function getTime(): DateTimeImmutable {
-        return $this->time;
+        return $this->time ?? new DateTimeImmutable();
     }
 
     public function setTime(DateTimeImmutable $time): void {
