@@ -32,6 +32,24 @@ class TelemetryClient {
     }
 
     /**
+     * Get or set the Telemetry Context
+     */
+    public function context(TelemetryContext $context = null): static|TelemetryContext {
+        if (!$context) return $this->context;
+        $this->context = $context;
+        return $this;
+    }
+
+    /**
+     * Get or set the Telemetry Channel
+     */
+    public function channel(TelemetryChannel $channel = null): static|TelemetryChannel {
+        if (!$channel) return $this->channel;
+        $this->channel = $channel;
+        return $this;
+    }
+
+    /**
      * Sends a Page View event to the Application Insights service
      */
     public function trackPageView(string $name, string $url, float $duration, array $properties = null, array $measurements = null): void {
@@ -160,5 +178,12 @@ class TelemetryClient {
             ->measurements($measurements), $this->context);
     }
 
+    /**
+     * Flushes the underlying Channel queue
+     */
+    public function flush(): void {
+        $this->channel->send();
+        $this->channel->resetQueue();
+    }
 
 }
